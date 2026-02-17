@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(cuid()) 
+  username String @unique
+  email String @unique
+  profile Profile?
+  products Product[]
+  purchases Purchase[]
+  password String
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id String @id @default(cuid())
+  userId String @unique
+  firstName String
+  lastName String
+  role ROLE
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum ROLE {
+  USER
+  SELLER
+  ADMIN
+}
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  description String
+  price Float
+  originalPrice Float? // Optional field to store the original price before discount
+  
+  categories Category[]
+  purchases Purchase[]
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String
+  products Product[]
+}
+
+model Purchase {
+  id String @id @default(cuid())
+  userId String
+  productId String
+  quantity Int
+  totalPrice Float
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
