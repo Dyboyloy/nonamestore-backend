@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../lib/PrismaClient";
-import { string, z } from "zod";
-import ProductRoute from "../Router/ProductRoute";
+import { z } from "zod";
 
 interface ProtectedRequest extends Request {
     user?: {
@@ -115,7 +114,7 @@ export const getRecommendedProducts = async (req: ProtectedRequest, res: Respons
     try {
         // Get purchased history of a user
         const userId = req.user?.id;
-        const purchaseProducts = await prisma.purchase.findMany({
+        const purchaseProducts = await prisma.order.findMany({
             where: {
                 userId: userId
             },
@@ -124,7 +123,7 @@ export const getRecommendedProducts = async (req: ProtectedRequest, res: Respons
             }
         }).then(res => res.map(r => r.productId));
         // Find similar users
-        const similarUsers = await prisma.purchase.groupBy({
+        const similarUsers = await prisma.order.groupBy({
             by: ['userId'],
             where: {
                 productId: { in: purchaseProducts},
@@ -138,7 +137,7 @@ export const getRecommendedProducts = async (req: ProtectedRequest, res: Respons
         const similarUserId = similarUsers.map(u => u.userId);
 
         // Get recommends products
-        const recommendations = await prisma.purchase.groupBy({
+        const recommendations = await prisma.order.groupBy({
             by: ['productId'],
             where: {
                 userId: { in: similarUserId },
@@ -167,7 +166,7 @@ export const getUserPurchaseHistory = async (req: ProtectedRequest, res: Respons
     try {
         const userId = req.user?.id;
 
-        const purchases = await prisma.purchase.findMany({
+        const purchases = await prisma.order.findMany({
             where: { userId },
             include: {
                 product: {
