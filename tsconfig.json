@@ -2,11 +2,16 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "rootDir": "./src",
     "outDir": "./.ts-node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+        "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
