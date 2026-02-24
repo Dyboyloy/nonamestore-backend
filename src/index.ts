@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import AuthRoute from './Router/AuthRoute';
 import UserRoute from './Router/UserRoute';
 import ProductRoute from './Router/ProductRoute';
+import OrderRoute from './Router/OrderRoute';
 
 const app: Express = express();
 
@@ -23,6 +24,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET)); // Use COOKIE_SECRET to sign c
 app.use('/api/v1/auth/', AuthRoute);
 app.use('/api/v1/user/', UserRoute);
 app.use('/api/v1/product/', ProductRoute);
+app.use('/api/v1/order/', OrderRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello, World!');

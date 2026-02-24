@@ -19,7 +19,7 @@ model User {
   email String @unique
   profile Profile?
   products Product[]
-  purchases Purchase[]
+  order Order[]
   password String
   createdAt DateTime @default(now())
 }
@@ -49,7 +49,7 @@ model Product {
   originalPrice Float? // Optional field to store the original price before discount
   
   categories Category[]
-  purchases Purchase[]
+  order Order[]
   userId String
   user User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -61,14 +61,23 @@ model Category {
   products Product[]
 }
 
-model Purchase {
+model Order {
   id String @id @default(cuid())
   userId String
   productId String
   quantity Int
   totalPrice Float
+  status OrderStatus
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
   product Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCCESING
+  CANCELED
+  PAID
+  DELIVERIED
 }

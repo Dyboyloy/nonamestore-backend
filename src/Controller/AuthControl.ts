@@ -135,4 +135,4 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     } catch (err) {
         return res.status(500).json({ message: "Login failed", error: err instanceof Error ? err.message : String(err) });
     }
-}
+};
